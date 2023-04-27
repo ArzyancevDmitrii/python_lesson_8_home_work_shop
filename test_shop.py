@@ -9,15 +9,20 @@ from models import Product, Cart
 @pytest.fixture
 def product():
     return Product("book", 100, "This is a book", 1000)
+
 @pytest.fixture
 def cart():
     return Cart()
 
+
 class TestProducts:
+
+
     """
     Тестовый класс - это способ группировки ваших тестов по какой-то тематике
     Например, текущий класс группирует тесты на класс Product
     """
+
 
     def test_product_check_quantity(self, product):
         # TODO напишите проверки на метод check_quantity
@@ -73,3 +78,25 @@ class TestCart:
         with pytest.raises((ValueError)):
             cart.add_product(product, quantity=1001)
             cart.buy()
+
+#todo добавление новых тестов: remove_product
+    def test_remove_product(self, product, cart):
+        cart.add_product(product, quantity=5)
+        cart.remove_product(product, quantity=2)
+        assert cart.products[product] == 3
+
+    def test_remove_product_all(self, product, cart):
+        cart.add_product(product, quantity=5)
+        cart.remove_product(product, quantity=5)
+        assert cart.products[product] == 0
+
+    def test_remove_product_more_than_is(self, product, cart):
+        cart.add_product(product, quantity=5)
+        cart.remove_product(product, quantity=7)
+        assert len(cart.products) == 0
+
+
+    def test_remove_product_without_quantity(self, product, cart):
+        cart.add_product(product, quantity=5)
+        cart.remove_product(product)
+        assert len(cart.products) == 0

@@ -51,9 +51,11 @@ class Cart:
         Если quantity больше, чем количество продуктов в позиции, то удаляется вся позиция
         """
         if product in self.products and quantity is None:
-            self.products.pop(product)
-        elif product in self.products and quantity > product.quantity:
-            self.products.pop(product)
+            del self.products[product]
+        elif product in self.products and quantity > self.products[product]:
+            del self.products[product]
+        elif product in self.products and quantity <= self.products[product]:
+            self.products[product] -= quantity
 
         # if product in self.products:
         #     if quantity is None or quantity >= self.products[product]:
@@ -72,7 +74,4 @@ class Cart:
 
     def buy(self):
         for product, quantity in self.products.items():
-            if product.check_quantity(quantity):
-                product.buy(quantity)
-            else:
-                raise ValueError("Не хватает продуктов")
+            product.buy(quantity)
